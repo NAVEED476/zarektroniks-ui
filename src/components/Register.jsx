@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -66,14 +66,34 @@ const Register = () => {
   useEffect(() => {
     const handleOnlineStatus = () => {
       setOnline(navigator.onLine);
+      if (navigator.onLine) {
+        const storedData = JSON.parse(localStorage.getItem("signupData"));
+        if (storedData && storedData.length > 0) {
+          storedData.forEach((data) => {
+            fetch("https://api-zarektroinks-1.onrender.com/api/auth/register", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            })
+              .then((response) => response.json())
+              .then((responseData) => {
+                console.log("Data posted successfully:", responseData);
+              })
+              
+              .catch((error) => console.error("Error posting data:", error));
+          });
+          localStorage.removeItem("signupData");
+        }
+      }
     };
 
     window.addEventListener("online", handleOnlineStatus);
-    window.addEventListener("offline", handleOnlineStatus);
+    handleOnlineStatus();
 
     return () => {
       window.removeEventListener("online", handleOnlineStatus);
-      window.removeEventListener("offline", handleOnlineStatus);
     };
   }, []);
 
@@ -92,6 +112,7 @@ const Register = () => {
 
   const validateEmail = (email) => {
     const re =
+      // Regular expression for basic email validation
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
@@ -110,8 +131,8 @@ const Register = () => {
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            alert("Account created successfully")
             // Clear form data after successful signup
+            window.alert("Signup successful! You can now log in.");
             setFormData({
               firstName: "",
               lastName: "",
@@ -126,7 +147,17 @@ const Register = () => {
         console.log("Invalid email address.");
       }
     } else {
-      console.log("Offline mode: Cannot submit form.");
+      console.log("Offline mode: Saving data to local storage.");
+      const storedData = JSON.parse(localStorage.getItem("signupData")) || [];
+      localStorage.setItem("signupData", JSON.stringify([...storedData, formData]));
+      setFormData({
+        firstName: "",
+        lastName: "",
+        username: "",
+        email: "",
+        mobileNumber: "",
+        password: "",
+      });
     }
   };
 
@@ -209,7 +240,6 @@ const Register = () => {
           <p>Offline mode: Please check your internet connection.</p>
         )}
       </Wrapper>
-      
     </Container>
   );
 };

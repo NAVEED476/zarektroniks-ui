@@ -1,70 +1,87 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MERN Stack Signup
 
-## Available Scripts
+This project is a simple signup application built using the MERN (MongoDB, Express.js, React.js, Node.js) stack. It allows users to sign up by providing their details and stores the data in MongoDB. The frontend is built with React and styled-components, and local storage is used to store data when offline. If a user already exists, the application will throw an error.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- User signup with basic details (first name, last name, email, username, password)
+- Data storage in MongoDB
+- Frontend built with React and styled-components
+- Offline data storage using local storage
+- Validating an email
+- Error handling for duplicate users
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Deployment
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The application is deployed on Vercel. You can access it [here](https://zarektroniks-ui.vercel.app/).
 
-### `npm test`
+## Technologies Used
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- MongoDB
+- Express.js
+- React.js
+- Node.js
+- styled-components
+- local storage
 
-### `npm run build`
+## Setup Instructions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repositories:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+for frontend
+git clone https://github.com/NAVEED476/zarektroniks-ui.git
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+for backend 
+git clone https://github.com/NAVEED476/api-zarektroinks.git
+```
 
-### `npm run eject`
+2. Navigate to the project directory:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+cd mern-signup
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Install dependencies for both the backend and frontend:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+cd server && npm install
+cd ../user && npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Start the backend server:
 
-## Learn More
+```bash
+cd ../server && npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+5. Start the frontend server:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+cd ../user && npm start
+```
 
-### Code Splitting
+6. Open your browser and navigate to [http://localhost:3000](http://localhost:3000) to view the application.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Project Structure
 
-### Analyzing the Bundle Size
+```
+mern-signup/
+│
+├── server/                  # Backend server files
+│   ├── controllers/          # Controller functions
+│   ├── models/               # Mongoose models
+│   ├── routes/               # API routes
+│   └── index.js                # Express app configuration
+│
+└── user/                 # Frontend React application
+    ├── public/
+    └── src/
+        ├── components/       # React components
+       
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## License
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
