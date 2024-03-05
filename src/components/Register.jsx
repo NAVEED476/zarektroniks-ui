@@ -110,6 +110,7 @@ const Register = () => {
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
+            alert("Account created successfully")
             // Clear form data after successful signup
             setFormData({
               firstName: "",
