@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration'; // Import service worker registration
+import * as serviceWorker from "./service-worker.js";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,4 +11,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-serviceWorkerRegistration.register(); // Call register function from serviceWorkerRegistration
+serviceWorker.register(); 

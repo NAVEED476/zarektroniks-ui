@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { openDB } from 'idb';
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -53,6 +54,7 @@ const Button = styled.button`
 
 const Register = () => {
   const [online, setOnline] = useState(navigator.onLine);
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -67,25 +69,7 @@ const Register = () => {
     const handleOnlineStatus = () => {
       setOnline(navigator.onLine);
       if (navigator.onLine) {
-        const storedData = JSON.parse(localStorage.getItem("signupData"));
-        if (storedData && storedData.length > 0) {
-          storedData.forEach((data) => {
-            fetch("https://api-zarektroinks-1.onrender.com/api/auth/register", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            })
-              .then((response) => response.json())
-              .then((responseData) => {
-                console.log("Data posted successfully:", responseData);
-              })
-              
-              .catch((error) => console.error("Error posting data:", error));
-          });
-          localStorage.removeItem("signupData");
-        }
+        submitStoredFormData();
       }
     };
 
@@ -117,7 +101,7 @@ const Register = () => {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (online) {
       if (emailValid) {
@@ -147,20 +131,79 @@ const Register = () => {
         console.log("Invalid email address.");
       }
     } else {
-      console.log("Offline mode: Saving data to local storage.");
-      const storedData = JSON.parse(localStorage.getItem("signupData")) || [];
-      localStorage.setItem("signupData", JSON.stringify([...storedData, formData]));
-      setFormData({
-        firstName: "",
-        lastName: "",
-        username: "",
-        email: "",
-        mobileNumber: "",
-        password: "",
-      });
+      console.log("Offline mode: Saving data to IndexedDB.");
+  
+      try {
+        const db = await openDB('registration', 1, {
+          upgrade(db) {
+            if (!db.objectStoreNames.contains('formData')) {
+              db.createObjectStore('formData', { keyPath: 'email' });
+            }
+          },
+        });
+        
+        const tx = db.transaction('formData', 'readwrite');
+        const store = tx.objectStore('formData');
+        await store.put(formData);
+        await tx.done;
+        console.log('Data stored in IndexedDB.');
+      } catch (error) {
+        console.error('Error storing data in IndexedDB:', error);
+      }
+    }
+  };
+  
+  const submitStoredFormData = async () => {
+    console.log("Submitting stored form data...");
+    try {
+      const db = await openDB('registration', 1);
+      const objectStoreNames = db.objectStoreNames;
+      if (!objectStoreNames.contains('formData')) {
+        console.log("Object store 'formData' not found.");
+        return;
+      }
+  
+      const tx = db.transaction('formData', 'readonly');
+      const store = tx.objectStore('formData');
+      const storedData = await store.getAll();
+      await tx.done;
+  
+      if (storedData && storedData.length > 0) {
+        storedData.forEach(async (data) => {
+          const response = await fetch("https://api-zarektroinks-1.onrender.com/api/auth/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const responseData = await response.json();
+          console.log("Data posted successfully:", responseData);
+        });
+        console.log('All stored data submitted.');
+        await clearStoredFormData();
+      }
+    } catch (error) {
+      console.error("Error submitting stored form data:", error);
+    }
+  };
+  
+  const clearStoredFormData = async () => {
+    console.log("Clearing stored form data...");
+    try {
+      const db = await openDB('registration', 1);
+      const tx = db.transaction('formData', 'readwrite');
+      const store = tx.objectStore('formData');
+      await store.clear();
+      await tx.done;
+      console.log("Stored form data cleared.");
+    } catch (error) {
+      console.error("Error clearing stored form data:", error);
     }
   };
 
+
+ 
   const isFormValid = () => {
     return (
       Object.values(formData).every((value) => value !== "") && emailValid

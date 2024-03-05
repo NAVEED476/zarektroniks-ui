@@ -8,7 +8,7 @@ This project is a simple signup application built using the MERN (MongoDB, Expre
 - User signup with basic details (first name, last name, email, username, password)
 - Data storage in MongoDB
 - Frontend built with React and styled-components
-- Offline data storage using local storage
+- Offline data storage using IndexDB
 - Validating an email
 - Error handling for duplicate users
 
