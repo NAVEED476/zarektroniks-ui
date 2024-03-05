@@ -100,7 +100,7 @@ const Register = () => {
     e.preventDefault();
     if (online) {
       if (emailValid) {
-        fetch("http://localhost:5000/api/auth/register", {
+        fetch("https://api-zarektroinks-1.onrender.com/api/auth/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
