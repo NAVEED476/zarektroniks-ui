@@ -51,10 +51,11 @@ const Button = styled.button`
     cursor: not-allowed;
   }
 `;
+const Loader = () => <div>Loading...</div>;
 
 const Register = () => {
   const [online, setOnline] = useState(navigator.onLine);
-  
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -126,7 +127,10 @@ const Register = () => {
               password: "",
             });
           })
-          .catch((error) => console.error("Error:", error));
+          .catch((error) => console.error("Error:", error))
+          .finally(() => {
+            setLoading(false); // Set loading to false after form submission completes
+          });
       } else {
         console.log("Invalid email address.");
       }
@@ -278,6 +282,7 @@ const Register = () => {
             {!emailValid && (
               <p style={{ color: "red", marginLeft:"10px" }}>Please enter a valid email address.</p>
             )}
+             {loading && <Loader />}
           </Form>
         ) : (
           <p>Offline mode: Please check your internet connection.</p>
